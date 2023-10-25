@@ -1,6 +1,8 @@
 CURRENT_UID := $(shell id -u)
 CURRENT_GID := $(shell id -g)
 ENV_FILE := $(PWD)/env/.env
+$(shell touch "${ENV_FILE}")
+
 NEW_VERSION_HASH := $(shell cat ${ENV_FILE} | grep -v VERSION_HASH | md5sum | cut -f1 -d" " | head -c 5)
 
 include ${ENV_FILE}
@@ -38,7 +40,9 @@ fresh: clean init change_version
 
 ## Init env variables for a fresh environment
 init:
-	flex_reload
+	@printf "Project refresh was done.\n"
+	unset FLEX_RELOAD_FLAG
+	flex-cli -handler flex/bash/emulator ls -la
 
 ## Clean this repository of ignored files
 ##
