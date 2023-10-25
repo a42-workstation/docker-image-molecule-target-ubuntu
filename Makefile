@@ -1,13 +1,13 @@
 CURRENT_UID := $(shell id -u)
 CURRENT_GID := $(shell id -g)
-ENV_FILE := $(PWD)/.env
-NEW_VERSION_HASH := $(shell cat .env | grep -v VERSION_HASH | md5sum | cut -f1 -d" " | head -c 5)
+ENV_FILE := $(PWD)/env/.env
+NEW_VERSION_HASH := $(shell cat ${ENV_FILE} | grep -v VERSION_HASH | md5sum | cut -f1 -d" " | head -c 5)
 
 include ${ENV_FILE}
 
 ## Compute the version hash
 change_version:
-	$(shell sed -i -e "s/VERSION_HASH=.*/VERSION_HASH=\"-${NEW_VERSION_HASH}\"/g" .env)
+	$(shell sed -i -e "s/VERSION_HASH=.*/VERSION_HASH=\"-${NEW_VERSION_HASH}\"/g" ${ENV_FILE})
 	@printf "New version: ${NEW_VERSION_HASH}\n"
 	@printf "Change version was done.\n"
 
@@ -38,7 +38,7 @@ fresh: clean init change_version
 
 ## Init env variables for a fresh environment
 init:
-	cp .env.sample .env
+	flex_reload
 
 ## Clean this repository of ignored files
 ##

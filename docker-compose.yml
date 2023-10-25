@@ -17,4 +17,4 @@ services:
   ubuntu:
     << : *default-ubuntu-image
     image: ${DOCKER_REGISTRY_WORKSTATION}${IMAGE_NAME}:${UBUNTU_VERSION}${VERSION_HASH}
-    container_name: ${DOCKER_REGISTRY_WORKSTATION}${IMAGE_NAME}:${UBUNTU_VERSION}${VERSION_HASH}
+    container_name: ${IMAGE_NAME}-${UBUNTU_VERSION}${VERSION_HASH}

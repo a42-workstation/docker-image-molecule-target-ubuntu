@@ -1,0 +1,15 @@
+{
+  "docker-compose": { "alias": "flex-docker-compose"},
+  "lproject": {
+    "alias": "lcli lproject"
+  },
+  "lproject-start": {
+    "alias": "(workspace services start docker -) && (docker-compose up -d) && echo Started ..."
+  },
+  "lproject-stop": {
+    "alias": "(docker-compose stop) && echo Stopped ..."
+  },
+  "lproject-restart": {
+    "alias": "lproject-stop && lproject-start && echo Restarted ..."
+  }
+}

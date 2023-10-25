@@ -1,3 +1,4 @@
 .flex-cli/cache
 .env
 .idea
+env/.env
