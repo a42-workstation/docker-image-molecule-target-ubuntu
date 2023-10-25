@@ -8,7 +8,7 @@ LABEL maintainer="George Babarus"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV pip_packages ""
+ENV pip_packages "ansible"
 
 # Install dependencies.
 RUN apt-get update \
