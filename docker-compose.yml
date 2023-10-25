@@ -1,0 +1,20 @@
+version: "3.8"
+
+x-build-ags: &default-build-ags
+  DOCKER_BUILD_DEBUG_VERBOSE: "${DOCKER_BUILD_DEBUG_VERBOSE}"
+
+x-ubuntu: &default-ubuntu-image
+  build:
+    args:
+      <<: *default-build-ags
+    context: .
+    dockerfile: Dockerfile
+  working_dir: ${APP_USER_HOME}/${APP_USER}
+  tty: true
+  stdin_open: true
+
+services:
+  ubuntu:
+    << : *default-ubuntu-image
+    image: ${DOCKER_REGISTRY_WORKSTATION}${IMAGE_NAME}:${UBUNTU_VERSION}${VERSION_HASH}
+    container_name: ${DOCKER_REGISTRY_WORKSTATION}${IMAGE_NAME}:${UBUNTU_VERSION}${VERSION_HASH}
