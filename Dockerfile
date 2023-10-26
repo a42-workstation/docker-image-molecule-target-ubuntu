@@ -24,9 +24,10 @@ RUN apt-get update \
        python3-setuptools \
        python3-pip \
        python3-yaml \
-       software-properties-common \
        rsyslog systemd systemd-cron sudo iproute2 \
+    && apt remove python3-cryptography -y \
     && if [ ! -z $pip_packages ]; then pip3 install $pip_packages; fi \
+    && pip install cryptography==41.0.5 --break-system-packages \
     && apt-get clean \
     && rm -Rf /var/lib/apt/lists/* \
     && rm -Rf /usr/share/doc && rm -Rf /usr/share/man
