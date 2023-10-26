@@ -22,5 +22,5 @@ x-ubuntu: &default-ubuntu-image
 services:
   ubuntu:
     << : *default-ubuntu-image
-    image: "${DOCKER_REGISTRY_WORKSTATION}${IMAGE_NAME}:${UBUNTU_VERSION}${VERSION_HASH}"
-    container_name: ${IMAGE_NAME}-${UBUNTU_VERSION}${VERSION_HASH}
+    image: "${DOCKER_REGISTRY_WORKSTATION}${IMAGE_NAME}:${IMAGE_VERSION}${VERSION_HASH}"
+    container_name: ${IMAGE_NAME}-${IMAGE_VERSION}${VERSION_HASH}

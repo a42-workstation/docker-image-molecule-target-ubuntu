@@ -1,10 +1,10 @@
 # @author George Babarus
 # @description Ubuntu image used for testing ansible playbooks with molecule. It will serve as a target for the molecule test.
 
-ARG UBUNTU_VERSION="latest"
+ARG IMAGE_VERSION="latest"
 ARG IMAGE_STAGE="ubuntu"
 
-FROM ubuntu:$UBUNTU_VERSION as ubuntu
+FROM ubuntu:$IMAGE_VERSION as ubuntu
 LABEL maintainer="George Babarus"
 
 ARG DEBIAN_FRONTEND=noninteractive
