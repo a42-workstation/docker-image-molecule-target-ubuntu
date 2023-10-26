@@ -6,25 +6,28 @@ FLEX_CLI_EXEC := $(shell which flex-cli)
 
 NEW_VERSION_HASH := $(shell cat ${ENV_FILE} | grep -v VERSION_HASH | md5sum | cut -f1 -d" " | head -c 5)
 
-include ${ENV_FILE}
+ifneq (,$(wildcard ${ENV_FILE}))
+    include ${ENV_FILE}
+    export
+endif
 
 ## Compute the version hash
 change_version:
+	$(eval NEW_VERSION_HASH := $(shell cat ${ENV_FILE} | grep -v VERSION_HASH | md5sum | cut -f1 -d" " | head -c 5))
 	$(shell sed -i -e "s/VERSION_HASH=.*/VERSION_HASH=\"-${NEW_VERSION_HASH}\"/g" ${ENV_FILE})
 	@printf "New version: ${NEW_VERSION_HASH}\n"
 	@printf "Change version was done.\n"
 
 ## Build the docker image
 build: fresh
-	export DOCKER_BUILDKIT=0
-	bash -c "docker compose --progress plain build"
-	bash -c "VERSION_HASH=\"-latest\" docker compose --progress plain build"
+	bash -c ". ${ENV_FILE} && docker compose --progress plain build"
+	bash -c ". ${ENV_FILE} && VERSION_HASH=\"-latest\" docker compose --progress plain build"
 	@printf "\n--> Build was done:\n\
 			\t${DOCKER_REGISTRY_WORKSTATION}${IMAGE_NAME}:${UBUNTU_VERSION}-${NEW_VERSION_HASH}\n"
 
 publish: build test
-	bash -c "docker compose push"
-	bash -c "VERSION_HASH=\"-latest\" docker compose push"
+	bash -c ". ${ENV_FILE} && docker compose push"
+	bash -c ". ${ENV_FILE} && VERSION_HASH=\"-latest\" docker compose push"
 	@printf "\n--> Build was pushed to repository ${DOCKER_REGISTRY_WORKSTATION}:\n\
 			\t ${IMAGE_NAME}:${UBUNTU_VERSION}-${NEW_VERSION_HASH}\n\
 			\t ${IMAGE_NAME}:${UBUNTU_VERSION}-latest\n"

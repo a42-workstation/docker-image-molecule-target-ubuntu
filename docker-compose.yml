@@ -2,6 +2,12 @@ version: "3.8"
 
 x-build-ags: &default-build-ags
   DOCKER_BUILD_DEBUG_VERBOSE: "${DOCKER_BUILD_DEBUG_VERBOSE}"
+  APP_USER_HOME: "${APP_USER_HOME}"
+  APP_USER: "${APP_USER}"
+  APP_USER_ID: "${APP_USER_ID}"
+  APP_GROUP: "${APP_GROUP}"
+  APP_GROUP_ID: "${APP_GROUP_ID}"
+  IMAGE_STAGE: "${IMAGE_STAGE}"
 
 x-ubuntu: &default-ubuntu-image
   build:
@@ -16,5 +22,5 @@ x-ubuntu: &default-ubuntu-image
 services:
   ubuntu:
     << : *default-ubuntu-image
-    image: ${DOCKER_REGISTRY_WORKSTATION}${IMAGE_NAME}:${UBUNTU_VERSION}${VERSION_HASH}
+    image: "${DOCKER_REGISTRY_WORKSTATION}${IMAGE_NAME}:${UBUNTU_VERSION}${VERSION_HASH}"
     container_name: ${IMAGE_NAME}-${UBUNTU_VERSION}${VERSION_HASH}

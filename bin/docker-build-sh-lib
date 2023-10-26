@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+# shellcheck disable=SC2034
+
+readonly DOCKER_PRINT_PREFIX="---->"
+readonly PRINT_LEVEL_1=1
+readonly PRINT_LEVEL_2=2
+readonly PRINT_LEVEL_3=3
+readonly PRINT_LEVEL_4=4
+readonly PRINT_SECTION_SEPARATOR="-----------------------------------------------"
+
+docker_print_status() {
+  statusPrefix=""
+  statusPrefixItem="$DOCKER_PRINT_PREFIX"
+  log_level=$2
+  log_level="${log_level:=$PRINT_LEVEL_1}"
+  i=0
+  while [ "$log_level" != "$i" ]
+  do
+    statusPrefix="$statusPrefixItem $statusPrefix"
+    i=$((i+1))
+  done
+
+  echo " ---> $statusPrefix $1"
+}
+
+docker_print_status_separator() {
+  docker_print_status "$PRINT_SECTION_SEPARATOR"
+}
+

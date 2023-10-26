@@ -1,0 +1,39 @@
+#!/usr/bin/env sh
+# shellcheck disable=SC2216
+set -e
+
+. docker-build-sh-lib
+
+docker_print_status_separator
+
+docker_print_status "START Create user and groups"
+# Add group if not exists if possible with preferred gid
+# try to create the group with the requested group id
+addgroup --gid "$APP_GROUP_ID" "$APP_GROUP" || true
+# create the group anyway
+getent group "$APP_GROUP" || addgroup "$APP_GROUP" || true
+# get the group id wanted by $APP_GROUP_ID -> this will be the main group for the user
+APP_GROUP_NAME_FOR_GID="$(getent group "$APP_GROUP_ID" | cut -d: -f1)"
+# try to create user with proper user id + assign to main group
+adduser --disabled-password --uid "$APP_USER_ID" --ingroup "$APP_GROUP_NAME_FOR_GID" --home "$APP_USER_HOME/$APP_USER" "$APP_USER" || true
+# create the user anyway if the user doesn't exists + assign to main group
+id -u "$APP_USER" || adduser --disabled-password --ingroup "$APP_GROUP_NAME_FOR_GID" --home "$APP_USER_HOME/$APP_USER" "$APP_USER"
+# add original group by name to user
+addgroup "$APP_USER" "$APP_GROUP"
+
+docker_print_status "Wanted user : $APP_USER/$APP_USER_ID " "$PRINT_LEVEL_2"
+docker_print_status "Created user: $APP_USER/$(id -u "$APP_USER") groups: $(groups "$APP_USER")" "$PRINT_LEVEL_2"
+
+docker_print_status "Wanted group : $APP_GROUP/$APP_GROUP_ID" "$PRINT_LEVEL_2"
+docker_print_status "Created group: $(getent group "$APP_GROUP_ID" | cut -d: -f1)/$APP_GROUP_ID" "$PRINT_LEVEL_2"
+docker_print_status "Created group: $APP_GROUP/$(getent group "$APP_GROUP" | cut -d: -f3)" "$PRINT_LEVEL_2"
+
+docker_print_status "Done" "$PRINT_LEVEL_2"
+
+# Create directory structure
+docker_print_status "Change permissions" "$PRINT_LEVEL_2"
+mkdir -p "$APP_USER_HOME/$APP_USER/.composer"
+chown -R "$APP_USER:$APP_GROUP_NAME_FOR_GID" "$APP_USER_HOME/$APP_USER"
+
+docker_print_status "END Create user and groups"
+docker_print_status_separator
