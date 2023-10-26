@@ -41,8 +41,8 @@ fresh: clean init change_version
 
 ## Init env variables for a fresh environment
 init:
-	#FLEX_RELOAD_FLAG=1 ${FLEX_CLI_EXEC} -handler flex/bash/emulator "exit 0"
-	FLEX_RELOAD_FLAG=1 /home/g/utils/lcli/flex_cli  -handler flex/bash/emulator "exit 0"
+	FLEX_RELOAD_FLAG=1 ${FLEX_CLI_EXEC} -handler flex/bash/emulator "exit 0"
+
 ## Clean this repository of ignored files
 ##
 ## !!! All the changes will be lost
