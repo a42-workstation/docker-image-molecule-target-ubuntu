@@ -15,11 +15,11 @@ getent group "$APP_GROUP" || addgroup "$APP_GROUP" || true
 # get the group id wanted by $APP_GROUP_ID -> this will be the main group for the user
 APP_GROUP_NAME_FOR_GID="$(getent group "$APP_GROUP_ID" | cut -d: -f1)"
 # try to create user with proper user id + assign to main group
-adduser --disabled-password --uid "$APP_USER_ID" --ingroup "$APP_GROUP_NAME_FOR_GID" --home "$APP_USER_HOME/$APP_USER" "$APP_USER" || true
+adduser --quiet --disabled-password --uid "$APP_USER_ID" --ingroup "$APP_GROUP_NAME_FOR_GID" --home "$APP_USER_HOME/$APP_USER" "$APP_USER" || true
 # create the user anyway if the user doesn't exists + assign to main group
-id -u "$APP_USER" || adduser --disabled-password --ingroup "$APP_GROUP_NAME_FOR_GID" --home "$APP_USER_HOME/$APP_USER" "$APP_USER"
+id -u "$APP_USER" || adduser --quiet --disabled-password --ingroup "$APP_GROUP_NAME_FOR_GID" --home "$APP_USER_HOME/$APP_USER" "$APP_USER"
 # add original group by name to user
-addgroup "$APP_USER" "$APP_GROUP"
+usermod -a -G "$APP_GROUP" "$APP_USER"
 
 docker_print_status "Wanted user : $APP_USER/$APP_USER_ID " "$PRINT_LEVEL_2"
 docker_print_status "Created user: $APP_USER/$(id -u "$APP_USER") groups: $(groups "$APP_USER")" "$PRINT_LEVEL_2"
